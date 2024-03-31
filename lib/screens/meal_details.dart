@@ -28,20 +28,33 @@ class MealDetailsScreen extends ConsumerWidget {
                       ? "Added to favorite"
                       : "Removed from favorite")));
             },
-            icon: isMealFavorite
-                ? const Icon(Icons.star)
-                : const Icon(Icons.star_border_outlined),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) => SlideTransition(
+                position:
+                    Tween(begin: const Offset(0, 0.5), end: const Offset(0, 0))
+                        .animate(CurvedAnimation(
+                            parent: animation, curve: Curves.easeInOut)),
+                child: child,
+              ),
+              child: Icon(
+                isMealFavorite ? Icons.star : Icons.star_border_outlined,
+                key: ValueKey(isMealFavorite),
+              ),
+            ),
           )
         ]),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(
-                meal.imageUrl,
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
+              Hero(
+                  tag: meal.id,
+                  child: Image.network(
+                    meal.imageUrl,
+                    height: 300,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  )),
               const SizedBox(height: 14),
               Text(
                 'Ingredients',
